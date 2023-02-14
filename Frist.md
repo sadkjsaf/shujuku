@@ -81,6 +81,11 @@ select sum(case sex when 1 Then 1 else 0 end) as 男,sum(case sex when 0 Then 1 
 
 十、查找某个姓氏男性人数大于二的数据，站不考虑双姓
 
-```
+```sql
+select left(nick_name,1) as frist from user
+where sex =1
+GROUP BY frist
+HAVING count(*)>2;
 ```
 
+![](D:\我的学习\数据库练习\第十题.png)
