@@ -34,8 +34,16 @@ on user.uid = org_user.uid right JOIN org on org.org_id = org_user.org_id;
 四、三表联查，按国家进行分组，注意不要漏掉了没有关联任何用户的国家
 
 ```sql
-select count(user.uid) as 有身份人总和,sum(case org_user.org_id when 8000 Then 1 else 0 end) as 魏国 ,sum(case org_user.org_id when 8001 Then 1 else 0 end) as 蜀国,sum(case org_user.org_id when 8002 Then 1 else 0 end) as 吴国,count(user.uid)-sum(case org_user.org_id when 8000 Then 1 else 0 end) -sum(case org_user.org_id when 8001 Then 1 else 0 end) -sum(case org_user.org_id when 8002 Then 1 else 0 end) as 民众 from user left JOIN org_user
-ON user.uid = org_user.uid left JOIN org ON org_user.org_id = org.org_id GROUP BY org.org_name;
+SELECT
+	count( USER.uid ) AS 总数,
+	max( org.org_name ) as 国家
+	
+FROM
+	USER left JOIN org_user ON USER.uid = org_user.uid
+	right JOIN org on org.org_id = org_user.org_id
+	 
+GROUP BY
+	org.org_name
 ```
 
 ![](D:\我的学习\数据库练习\第二天第四题.png)
@@ -43,8 +51,19 @@ ON user.uid = org_user.uid left JOIN org ON org_user.org_id = org.org_id GROUP B
 五、三表联查，按国家进行分组，筛选出国家人数小于等于0的国家
 
 ```sql
-select count(user.uid)-sum(case org_user.org_id when 8000 Then 1 else 0 end) -sum(case org_user.org_id when 8001 Then 1 else 0 end) -sum(case org_user.org_id when 8002 Then 1 else 0 end) as 民众 from user right JOIN org_user
-ON user.uid = org_user.uid INNER JOIN org on org_user.org_id = org.org_id GROUP BY org.org_name HAVING count(*)>=0;
+SELECT
+	count( USER.uid ) AS 总数,
+	max( org.org_name ) as 国家
+	
+FROM
+	USER  JOIN org_user ON USER.uid = org_user.uid
+	RIGHT JOIN org on org.org_id = org_user.org_id
+	 
+GROUP BY
+	org.org_name
+HAVING 总数<=0
+	
+order by 总数 asc
 ```
 
 ![](D:\我的学习\数据库练习\第二天第五题.png)
@@ -52,8 +71,19 @@ ON user.uid = org_user.uid INNER JOIN org on org_user.org_id = org.org_id GROUP 
 六、三表联查，按国家进行分组，筛选出国家人数大于20的国家，并按人数倒序排列
 
 ```sql
-select count(user.uid) as 有身份人总和,sum(case org_user.org_id when 8000 Then 1 else 0 end) as 魏国 ,sum(case org_user.org_id when 8001 Then 1 else 0 end) as 蜀国,sum(case org_user.org_id when 8002 Then 1 else 0 end) as 吴国,count(user.uid)-sum(case org_user.org_id when 8000 Then 1 else 0 end) -sum(case org_user.org_id when 8001 Then 1 else 0 end) -sum(case org_user.org_id when 8002 Then 1 else 0 end) as 民众 from user right JOIN org_user
-ON user.uid = org_user.uid left JOIN org ON org_user.org_id = org.org_id GROUP BY org_name HAVING count(*)>=20;
+SELECT
+	count( USER.uid ) AS 总数,
+	max( org.org_name ) as 国家
+	
+FROM
+	USER  JOIN org_user ON USER.uid = org_user.uid
+	RIGHT JOIN org on org.org_id = org_user.org_id
+	 
+GROUP BY
+	org_user.org_id
+HAVING 总数>20
+	
+order by 总数 desc
 ```
 
 ![](D:\我的学习\数据库练习\第二天第六题.png)
