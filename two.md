@@ -80,7 +80,7 @@ FROM
 	RIGHT JOIN org on org.org_id = org_user.org_id
 	 
 GROUP BY
-	org_user.org_id
+	org.org_name
 HAVING 总数>20
 	
 order by 总数 desc
@@ -91,18 +91,23 @@ order by 总数 desc
 七、模拟登录场景，查询刘备用手机登录，需要从数据库查询到数据，包括头像，昵称，用户编号，密码字符串等
 
 ```sql
-SELECT user_name,avatar,`password`,nick_name from user where mobile = 17780008000;
+SELECT uid,avatar,`password`,nick_name from user where mobile = 17780008000;
 ```
 
 ![](D:\我的学习\数据库练习\第二天第七题.png)
 
-八、因为刘备是君主，拥有查询到蜀国所有人的权限，模拟刘备查看蜀国所有人的语句
+八、因为刘备是君主，拥有查询到蜀国所有人的权限，模拟刘备查看蜀国所有人的语句(根据uid查询到org_id,再查询国家)
 
 ```sql
+select org.org_id
+from user right JOIN org_user
+on user.uid = org_user.uid right JOIN org on org.org_id = org_user.org_id 
+where user.uid=8000;
+
 select *
 from user right JOIN org_user
 on user.uid = org_user.uid right JOIN org on org.org_id = org_user.org_id 
-where org_name = '蜀国';
+where org.org_id=8001;
 ```
 
 ![](D:\我的学习\数据库练习\第二天第八题.png)
@@ -110,10 +115,15 @@ where org_name = '蜀国';
 九、因为刘备是君主，拥有查询到蜀国所有人的权限，模拟刘备查看关羽详细信息的语句
 
 ```sql
+select org.org_id
+from user right JOIN org_user
+on user.uid = org_user.uid right JOIN org on org.org_id = org_user.org_id 
+where user.uid=8000;
+
 select *
 from user right JOIN org_user
 on user.uid = org_user.uid right JOIN org on org.org_id = org_user.org_id 
-where org_name = '蜀国' and nick_name = '关羽';
+where org.org_id=8001 and user.nick_name = '关羽';
 ```
 
 ![](D:\我的学习\数据库练习\第二天第九题.png)
